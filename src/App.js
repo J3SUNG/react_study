@@ -2,9 +2,11 @@ import './App.css';
 
 const App = () => {
   return (
-    <div>
+    <div className="div">
       <div className="room"></div>
-      <div className="square"></div>
+      <div className="toper"></div>
+      <div className="desk1"></div>
+      <div className="desk2"></div>
     </div>
   );
 };
