@@ -1,5 +1,12 @@
+import './App.css';
+
 const App = () => {
-  return <div>Hello</div>;
+  return (
+    <div>
+      <div className="room"></div>
+      <div className="square"></div>
+    </div>
+  );
 };
 
 export default App;
