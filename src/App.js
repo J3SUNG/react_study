@@ -1,13 +1,12 @@
 function App() {
-  const name = "Jetty";
-  const style = {
-    backgroundColor: "black",
-    color: "aqua",
-    fontSzie: "48px",
-    fontWeight: "bold",
-    padding: 16,
-  };
-  return <div style={style}>{name}</div>;
+  return (
+    <>
+      <div className="react">리액트</div>
+      {/* <div>주석 처리된 내용</div> */}
+      <div>// 주석처리 되지 않은 내용 </div>
+      <div>/* 주석처리 되지 않은 내용 */</div>
+    </>
+  );
 }
 
 export default App;
