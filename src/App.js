@@ -1,14 +1,13 @@
-import "./App.css";
-
 function App() {
-  return (
-    <>
-      <header className="App-header">
-        <div className="greet">Hello, I'm Jetty!</div>
-        <div className="greet">React & JSX</div>
-      </header>
-    </>
-  );
+  const name = "Jetty";
+  const style = {
+    backgroundColor: "black",
+    color: "aqua",
+    fontSzie: "48px",
+    fontWeight: "bold",
+    padding: 16,
+  };
+  return <div style={style}>{name}</div>;
 }
 
 export default App;
