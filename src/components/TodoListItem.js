@@ -1,5 +1,5 @@
 import { MdCheckBoxOutlineBlank, MdCheckBox, MdRemoveCircleOutline } from "react-icons/md";
-import "./TodoListItem.scss";
+import "./scss/TodoListItem.scss";
 
 const TodoListItem = () => {
   return (
