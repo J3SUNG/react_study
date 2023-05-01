@@ -19,10 +19,7 @@ const Home = () => {
           <Link to="/profiles/duri">존재하지 않는 프로필</Link>
         </li>
         <li>
-          <Link to="/profiles/jetty1">존재하지 않는 프로필</Link>
-        </li>
-        <li>
-          <Link to="/profiles/jetty/123">존재하지 않는 프로필</Link>
+          <Link to="/articles">게시글 목록</Link>
         </li>
       </ul>
     </div>
