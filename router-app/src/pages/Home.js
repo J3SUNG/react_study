@@ -18,6 +18,12 @@ const Home = () => {
         <li>
           <Link to="/profiles/duri">존재하지 않는 프로필</Link>
         </li>
+        <li>
+          <Link to="/profiles/jetty1">존재하지 않는 프로필</Link>
+        </li>
+        <li>
+          <Link to="/profiles/jetty/123">존재하지 않는 프로필</Link>
+        </li>
       </ul>
     </div>
   );
