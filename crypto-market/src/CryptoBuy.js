@@ -5,6 +5,14 @@ import { CryptoTable } from "./CryptoTable";
 import { CryptoDetail } from "./CryptoDetail";
 import { CryptoBasket } from "./CryptoBasket";
 
+/**
+ * - 페이지네이션이 동작하게 하라.
+ * - `INFO` 버튼이 클릭되었을 때 데이터를 넘겨 `CryptoDetail.js`가 올바르게 출력되도록 하라.
+ * - `CryptoDetail.js`이 닫힐 경우 ~경로로 get 요청을 보내도록 한다.
+ * - `CryptoTable.js` 에서 코인 `BUY` 버튼을 누르면 장바구니에 추가된다. 단, 이미 담겨있다면 무시된다.
+ * - `CryptoBasket.js` 에서 코인 빼기 버튼을 눌러 장바구니의 개수가 0이 되면 아이템을 삭제한다.
+ */
+
 const COIN_ITEMS = [
   [
     {
@@ -37,56 +45,29 @@ export function CryptoBuy() {
   const [baskets, setBaskets] = useState([]);
 
   useEffect(() => {
-    /**
-     * axios로 특정 페이지의 코인 데이터를 가져오는 코드가 존재했음.
-     */
-    setItems(COIN_ITEMS[page]);
-  }, [
-    /*
-      1번 문제
-      페이지 상태를 의존성으로 넣어야 페이지네이션 기능이 동작함.
-    */
-    page,
-  ]);
+    Promise.resolve(COIN_ITEMS[page]).then((items) => {
+      setItems(items);
+    });
+  }, [page]);
 
-  /*
-  CryptoTable에 전달되는 함수를 클로저 함수로 변경하여 3번 문제를 해결
-  */
   const handleOpenDetail = (item) => () => {
-    setCurrency(item);
+    Promise.resolve().then(() => {
+      setCurrency(item);
+    });
   };
 
   const handleCloseDetail = () => {
-    /**
-     * ?번 문제
-     * CryptoDetail를 닫을 때 axios로 get 요청을 날려야 한다.
-     * POST 요청을 날리도록 장난질을 쳐 뒀음.
-     */
-    /*
-    new Promise()
+    Promise.resolve()
       .then(() => {
         setCurrency(null);
       })
       .catch(() => {
         setCurrency(null);
       });
-      */
-
-    setCurrency(null);
   };
 
-  /*
-  ?번 문제
-  CryptoTable에서 코인 구매 버튼을 누르면 장바구니에 추가된다.
-  마찬가지로 클로저 써서 넘겨야할듯
-  
-  제약조건
-  1. 이미 담겨있다면 무시된다.
-  */
   const handleBuyCoin = (item) => () => {
     setBaskets((prev) => {
-      console.log(prev);
-
       const coin = prev.find(({ id }) => id === item.id);
 
       if (coin) {
@@ -99,10 +80,6 @@ export function CryptoBuy() {
     });
   };
 
-  /**
-   * ??번 문제
-   * 장바구니의 개수가 0이 되면 아이템을 삭제한다.
-   */
   const handleSubtractItem = (item) => () => {
     setBaskets((prev) => {
       const next = [...prev];

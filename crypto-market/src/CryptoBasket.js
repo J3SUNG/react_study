@@ -1,6 +1,12 @@
 import { useRef, useState, useContext } from "react";
 import { context } from "./context";
 
+/**
+ * - 장바구니에 있는 코인의 평균을 계산해라. (코인의 개수는 고려x, 장바구니에 아무것도 없으면 0)
+ * - 장바구니가 비었거나, 주문 메세지가 없으면 주문 input을 focus 하고 경고 메세지를 출력하라.
+ * - 장바구니가 존재하고, 주문 메세지가 존재하면 주문 목록에 추가한다.
+ */
+
 export function CryptoBasket({
   baskets = [],
   handleSubtractItem,
@@ -9,18 +15,14 @@ export function CryptoBasket({
 }) {
   const inputRef = useRef();
 
+  const [alert, setAlert] = useState(null);
+
   const [message, setMessage] = useState("");
 
   const ctx = useContext(context);
 
   addOrder = ctx.addOrder;
 
-  /**
-   * ?번 문제
-   * 코인 평균 구하기 (코인 하나 당 가격 기준)
-   *
-   * 장바구니에 아무것도 없으면 0을 출력
-   */
   let coinAverage = (() => {
     if (baskets.length === 0) {
       return 0;
@@ -29,22 +31,12 @@ export function CryptoBasket({
     return Math.floor(baskets.reduce((a, c) => a + c.price, 0) / baskets.length);
   })();
 
-  /*
-  ?번 문제
-  장바구니가 아무것도 없거나, 주문 메세지가 없다면 , 주문 메세지 input을 focus
-
-  경고 메세지를 띄운다는 테스트케이스도 존재했던 것 같음.
-
-    current를 빼놓고, focus, blur 함수를 호출하지 않고 참조하는 장난을 쳐놨음.
-
-
-    ?번 문제
-    조건을 만족하면 주문 목록에 추가되어야 한다.
-  */
   const handleOrderButtonClick = () => {
     if (Object(baskets).length === 0 || message === "") {
+      setAlert("경고");
       inputRef.current.focus();
     } else {
+      setAlert("");
       addOrder(message);
       inputRef.current.blur();
     }
@@ -85,6 +77,10 @@ export function CryptoBasket({
       <div style={{ display: "flex" }}>
         <input ref={inputRef} value={message} onChange={(e) => setMessage(e.target.value)} />
         <button onClick={handleOrderButtonClick}>주문하기</button>
+      </div>
+
+      <div>
+        <p style={{ color: "red" }}>{alert}</p>
       </div>
     </div>
   );

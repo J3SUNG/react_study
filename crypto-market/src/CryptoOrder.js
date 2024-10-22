@@ -1,12 +1,13 @@
 import { useContext } from "react";
 import { context } from "./context";
 
+/**
+ * - 주문 내역을 표시하라.
+ */
+
 export function CryptoOrder({ orders }) {
   const ctx = useContext(context);
 
-  /*
-    17? 주문 내역을 표시하게 하라.
-  */
   orders = ctx.orders;
 
   return (
