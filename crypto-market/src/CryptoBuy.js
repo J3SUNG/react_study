@@ -7,10 +7,15 @@ import { CryptoBasket } from "./CryptoBasket";
 
 /**
  * - 페이지네이션이 동작하게 하라.
+ * setPage(prev => prev + 1);
  * - `INFO` 버튼이 클릭되었을 때 데이터를 넘겨 `CryptoDetail.js`가 올바르게 출력되도록 하라.
+ *
  * - `CryptoDetail.js`이 닫힐 경우 ~경로로 get 요청을 보내도록 한다.
+ *
  * - `CryptoTable.js` 에서 코인 `BUY` 버튼을 누르면 장바구니에 추가된다. 단, 이미 담겨있다면 무시된다.
+ *
  * - `CryptoBasket.js` 에서 코인 빼기 버튼을 눌러 장바구니의 개수가 0이 되면 아이템을 삭제한다.
+ *
  */
 
 const COIN_ITEMS = [
@@ -45,28 +50,49 @@ export function CryptoBuy() {
   const [baskets, setBaskets] = useState([]);
 
   useEffect(() => {
-    Promise.resolve(COIN_ITEMS[page]).then((items) => {
-      setItems(items);
-    });
+    // const fetchItems = async () => {
+    //   try {
+    //     const response = await axios.get(`/api/coins?page=${page}`);
+    //     setItems(response.data);
+    //   } catch (error) {
+    //     console.error("Error fetching items:", error); // 에러 처리
+    //     setItems(null);
+    //   }
+    // };
+
+    // fetchItems();
+    setItems(COIN_ITEMS[page]);
   }, [page]);
 
   const handleOpenDetail = (item) => () => {
-    Promise.resolve().then(() => {
-      setCurrency(item);
-    });
+    setCurrency(item);
   };
 
-  const handleCloseDetail = () => {
-    Promise.resolve()
-      .then(() => {
-        setCurrency(null);
-      })
-      .catch(() => {
-        setCurrency(null);
-      });
+  const handleCloseDetail = async () => {
+    // try {
+    //   const response = await axios.get("api/data/page");
+    //   setItems(response.data);
+    //   setCurrency(null);
+    // } catch (error) {
+    //   console.error("Error closing detail view:", error);
+    //   setCurrency(null);
+    // }
+    setCurrency(null);
   };
 
   const handleBuyCoin = (item) => () => {
+    setBaskets((prev) => {
+      const coin = prev.find(({ id }) => id === item.id);
+
+      if (coin) {
+        return prev;
+      }
+
+      const next = [...prev, { ...item, count: 1 }];
+
+      return next;
+    });
+
     setBaskets((prev) => {
       const coin = prev.find(({ id }) => id === item.id);
 
@@ -82,39 +108,28 @@ export function CryptoBuy() {
 
   const handleSubtractItem = (item) => () => {
     setBaskets((prev) => {
-      const next = [...prev];
+      const next = prev.map((coin) => {
+        if (coin.id === item.id) {
+          return { ...coin, count: coin.count - 1 };
+        }
 
-      const coinIdx = next.findIndex(({ id }) => id === item.id);
+        return coin;
+      });
 
-      if (coinIdx === -1) {
-        return prev;
-      }
+      const filter = next.filter((coin) => coin.count > 0);
 
-      const coin = next[coinIdx];
-
-      if (coin.count - 1 === 0) {
-        next.splice(coinIdx, 1);
-
-        return next;
-      }
-
-      coin.count = coin.count - 1;
-
-      return next;
+      return filter;
     });
   };
 
   const handlePlusItem = (item) => () => {
     setBaskets((prev) => {
-      const next = [...prev];
-
-      const coin = next.find(({ id }) => id === item.id);
-
-      if (!coin) {
-        return prev;
-      }
-
-      coin.count = coin.count + 1;
+      const next = prev.map((coin) => {
+        if (coin.id === item.id) {
+          return { ...coin, count: coin.count + 1 };
+        }
+        return coin;
+      });
 
       return next;
     });

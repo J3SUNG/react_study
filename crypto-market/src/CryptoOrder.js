@@ -5,10 +5,8 @@ import { context } from "./context";
  * - 주문 내역을 표시하라.
  */
 
-export function CryptoOrder({ orders }) {
-  const ctx = useContext(context);
-
-  orders = ctx.orders;
+export function CryptoOrder() {
+  const { orders } = useContext(context);
 
   return (
     <div style={{ border: "1px solid black", marginTop: "10px" }}>

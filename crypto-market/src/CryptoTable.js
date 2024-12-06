@@ -19,13 +19,7 @@ export function CryptoTable({ page, items = [], handleOpenDetail, handleBuyCoin 
         <tbody>
           {items.map((item) => (
             <tr key={item.id}>
-              <td
-                style={{
-                  color: item.price > 1500 ? "green" : "",
-                }}
-              >
-                {item.name}
-              </td>
+              <td style={{ color: item.price > 1500 ? "green" : "black" }}>{item.name}</td>
               <td>{item.price}</td>
               <td>
                 <button onClick={handleOpenDetail(item)}>INFO</button>
