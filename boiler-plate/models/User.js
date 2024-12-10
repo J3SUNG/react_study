@@ -35,7 +35,7 @@ const userSchema = mongoose.Schema({
 });
 
 userSchema.pre("save", function (next) {
-  var user = this;
+  const user = this;
 
   if (user.isModified("password")) {
     bcrypt.genSalt(saltRounds, function (err, salt) {
@@ -52,35 +52,36 @@ userSchema.pre("save", function (next) {
   }
 });
 
-userSchema.methods.comparePassword = function (plainPassword, cb) {
-  bcrypt.compare(plainPassword, this.password, function (err, isMatch) {
-    if (err) return cb(err);
-    cb(null, isMatch);
-  });
+userSchema.methods.comparePassword = async function (plainPassword) {
+  try {
+    return bcrypt.compare(plainPassword, this.password);
+  } catch (err) {
+    throw new Error("비밀번호 비교 실패");
+  }
 };
 
 userSchema.methods.generateToken = async function () {
   try {
-    var user = this;
-    var token = jwt.sign(user._id.toHexString(), "secretToken");
+    const user = this;
+    const token = jwt.sign({ _id: user._id.toHexString() }, "secretToken");
     user.token = token;
     await user.save();
     return user;
   } catch (err) {
-    console.log("토큰 생성 실패");
     throw new Error("토큰 생성 실패");
   }
 };
 
-userSchema.statics.findByToken = function (token, cb) {
-  var user = this;
+userSchema.statics.findByToken = async function (token) {
+  const user = this;
 
-  jwt.verify(token, "secretToken", function (err, decode) {
-    user.findOne({ _id: decode, token: token }, function (err, user) {
-      if (err) return cb(err);
-      cb(null, user);
-    });
-  });
+  try {
+    const decoded = await jwt.verify(token, "secretToken");
+    const foundUser = await user.findOne({ _id: decoded, token: token });
+    return foundUser;
+  } catch (err) {
+    throw new Error("토큰 검증 실패");
+  }
 };
 
 const User = mongoose.model("User", userSchema);

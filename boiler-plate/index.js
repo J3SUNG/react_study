@@ -19,20 +19,18 @@ mongoose
 
 app.get("/", (req, res) => res.send("Hello World!"));
 
-app.post("/register", async (req, res) => {
+app.post("/api/users/register", async (req, res) => {
   const user = new User(req.body);
-  console.log("req.body: ", req.body);
 
   try {
     await user.save();
     return res.status(200).json({ success: true });
   } catch (err) {
-    console.log("에러: ", err);
     return res.status(500).json({ success: false, err });
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/api/users/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
@@ -42,24 +40,17 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    user.comparePassword(req.body.password, async (err, isMatch) => {
-      if (!isMatch) {
-        return res.json({ loginSuccess: false, message: "비밀번호가 틀렸습니다." });
-      }
+    const isMatch = await user.comparePassword(req.body.password);
+    if (!isMatch) {
+      return res.json({ loginSuccess: false, message: "비밀번호가 틀렸습니다." });
+    }
 
-      try {
-        const token = await user.generateToken();
-        res.cookie("x_auth", token).status(200).json({
-          loginSuccess: true,
-          userId: user._id,
-        });
-      } catch (err) {
-        console.log("토큰 생성 실패: ", err);
-        return res.status(500).json({ err });
-      }
+    const userInfo = await user.generateToken();
+    res.cookie("x_auth", userInfo.token, { httpOnly: true }).status(200).json({
+      loginSuccess: true,
+      userId: user._id,
     });
   } catch (err) {
-    console.log("로그인 실패: ", err);
     return res.status(500).json({ loginSuccess: false, err });
   }
 });
@@ -75,6 +66,16 @@ app.get("/api/users/auth", auth, (req, res) => {
     role: req.user.role,
     image: req.user.image,
   });
+});
+
+app.get("/api/users/logout", auth, async (req, res) => {
+  try {
+    await User.findOneAndUpdate({ _id: req.user._id }, { token: "" });
+    res.clearCookie("x_auth");
+    return res.status(200).send({ success: true });
+  } catch (err) {
+    return res.status(500).json({ success: false, err });
+  }
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
