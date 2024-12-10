@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 5000;
+const config = require("./config/key");
 const { User } = require("./models/User");
 
 app.use(express.urlencoded({ extended: true }));
@@ -9,9 +10,7 @@ app.use(express.json());
 const mongoose = require("mongoose");
 mongoose.set("debug", true);
 mongoose
-  .connect(
-    "mongodb+srv://JETTY:6141@boilerplate.uhaze.mongodb.net/?retryWrites=true&w=majority&appName=boilerplate"
-  )
+  .connect(config.mongoURI)
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.log(err));
 
