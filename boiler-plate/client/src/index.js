@@ -5,15 +5,13 @@ import { Provider } from "react-redux";
 import "antd/dist/antd.css";
 import { configureStore } from "@reduxjs/toolkit";
 import promiseMiddleware from "redux-promise";
-import ReduxThunk from "redux-thunk";
 import Reducer from "./_reducers";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const store = configureStore({
   reducer: Reducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(promiseMiddleware, ReduxThunk),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(promiseMiddleware),
   devTools: process.env.NODE_ENV !== "production",
 });
 
