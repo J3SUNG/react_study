@@ -24,3 +24,13 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
+
+export const authUser = createAsyncThunk("user/auth", async (_, { rejectWithValue }) => {
+  try {
+    const response = await axios.get("/api/users/auth");
+    console.log("auth response", response);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response.data || "auth failed");
+  }
+});
