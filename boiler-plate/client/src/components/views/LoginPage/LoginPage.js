@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userAction } from "../../../_actions/userAction";
+import { loginUser } from "../../../_actions/userAction";
 
 function LoginPage(props) {
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ function LoginPage(props) {
       password,
     };
 
-    dispatch(userAction(body)).then((response) => {
+    dispatch(loginUser(body)).then((response) => {
       if (response.payload.loginSuccess) {
         navigate("/");
       } else {
@@ -52,7 +52,7 @@ function LoginPage(props) {
         <input type="password" value={password} onChange={onPasswordHandler} />
 
         <br />
-        <button>Login</button>
+        <button type="submit">Login</button>
       </form>
     </div>
   );
