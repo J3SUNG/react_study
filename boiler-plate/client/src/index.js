@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { Provider } from "react-redux";
-import "antd/dist/antd.css";
+import "antd/dist/reset.css";
 import { configureStore } from "@reduxjs/toolkit";
 import promiseMiddleware from "redux-promise";
 import Reducer from "./_reducers";
