@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     axios
       .post("/api/users/login", {
@@ -10,6 +13,17 @@ function LandingPage() {
       })
       .then((response) => console.log(response));
   }, []);
+
+  const onClickHandler = () => {
+    axios.get("/api/users/logout").then((response) => {
+      if (response.data.success) {
+        navigate("/login");
+      } else {
+        alert("Failed to logout");
+      }
+    });
+  };
+
   return (
     <div
       style={{
@@ -21,6 +35,7 @@ function LandingPage() {
       }}
     >
       <h2>시작 페이지</h2>
+      <button onClick={onClickHandler}>logout</button>
     </div>
   );
 }
