@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/chat/Sidebar";
+import { Header } from "./Header";
 
 export default function ChatLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -6,7 +7,10 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
       <div className="hidden md:block w-[300px]">
         <Sidebar />
       </div>
-      <div>{children}</div>
+      <div className="flex flex-col flex-1 h-full">
+        <Header />
+        {children}
+      </div>
     </div>
   );
 }
