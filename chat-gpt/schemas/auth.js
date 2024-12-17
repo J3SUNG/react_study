@@ -14,3 +14,8 @@ export const SignUpSchema = z.object({
     .regex(/[0-9]/, { message: "비밀번호에 숫자를 포함해주세요." })
     .regex(/[\W_]/, { message: "비밀번호에 특수문자를 포함해주세요." }),
 });
+
+export const LoginSchema = z.object({
+  email: z.string().email({ message: "유효한 이메일 주소를 입력해주세요." }),
+  password: z.string().min(1, { message: "비밀번호를 입력해주세요." }),
+});
