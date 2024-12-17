@@ -1,5 +1,11 @@
+"use client";
+
+import { useState } from "react";
+import { AutoResizingTextarea } from "./AutoResizingTextarea";
 import { Empty } from "./Empty";
 import { Message } from "./Message";
+import { Button } from "../ui/button";
+import { ArrowUp } from "lucide-react";
 
 const MESSAGE_DUMMY = [
   { id: "1", content: "더미데이터1", role: "user" },
@@ -7,6 +13,7 @@ const MESSAGE_DUMMY = [
 ];
 
 export function Chat() {
+  const [value, setValue] = useState("");
   return (
     <div className="flex flex-col w-[80%] h-full mx-auto">
       <div className="flex-1">
@@ -24,6 +31,14 @@ export function Chat() {
             ))}
           </>
         )}
+      </div>
+      <div className="pb-5">
+        <form className="flex items-center justify-center gap-4">
+          <AutoResizingTextarea value={value} onChange={(e) => setValue(e.target.value)} />
+          <Button type="submit" size="icon">
+            <ArrowUp />
+          </Button>
+        </form>
       </div>
     </div>
   );
