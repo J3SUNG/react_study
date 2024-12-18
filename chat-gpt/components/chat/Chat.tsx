@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useChat } from "ai/react";
+import { useChat, Message as TMessage } from "ai/react";
 import { AutoResizingTextarea } from "./AutoResizingTextarea";
 import { Empty } from "./Empty";
 import { Message } from "./Message";
@@ -12,10 +12,14 @@ import { useParams, useRouter } from "next/navigation";
 import { addMessages, createConversation } from "@/actions/conversation";
 import { CHAT_ROUTES } from "@/constants/routes";
 
-export function Chat() {
+type Props = {
+  initialMessages?: TMessage[];
+};
+
+export function Chat({ initialMessages }: Props) {
   const router = useRouter();
   const params = useParams<{ conversationId: string }>();
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
+  const { messages, setMessages, input, handleInputChange, handleSubmit } = useChat({
     onFinish: async (message) => {
       if (!params.conversationId) {
         const conversation = await createConversation(input);
@@ -24,11 +28,18 @@ export function Chat() {
 
         router.push(`${CHAT_ROUTES.CONVERSATIONS}/${conversation.id}`);
       } else {
+        await addMessages(params.conversationId, input, message.content);
       }
     },
   });
   const model = useModelStore((state) => state.model);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (initialMessages) {
+      setMessages(initialMessages);
+    }
+  }, [initialMessages, setMessages]);
 
   useEffect(() => {
     if (scrollRef.current) {

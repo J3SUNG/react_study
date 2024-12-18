@@ -1,3 +1,6 @@
+"use server";
+
+import { verifySession } from "@/actions/sessions";
 import db from "@/db";
 import { user } from "@/db/schema";
 import { User } from "@/types/db";
@@ -18,4 +21,19 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
     console.error(error);
     throw new Error("DB Error");
   }
+};
+
+export const getConversationByUser = async () => {
+  const session = await verifySession();
+
+  const response = await db.query.user.findFirst({
+    where: eq(user.id, session.id),
+    with: {
+      conversations: {
+        orderBy: (conversation, { desc }) => [desc(conversation.updated_at)],
+      },
+    },
+  });
+
+  return response?.conversations || [];
 };
