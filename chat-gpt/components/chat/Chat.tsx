@@ -8,9 +8,25 @@ import { Message } from "./Message";
 import { Button } from "../ui/button";
 import { ArrowUp } from "lucide-react";
 import { useModelStore } from "@/store/model";
+import { useParams, useRouter } from "next/navigation";
+import { addMessages, createConversation } from "@/actions/conversation";
+import { CHAT_ROUTES } from "@/constants/routes";
 
 export function Chat() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const router = useRouter();
+  const params = useParams<{ conversationId: string }>();
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    onFinish: async (message) => {
+      if (!params.conversationId) {
+        const conversation = await createConversation(input);
+
+        await addMessages(conversation.id, input, message.content);
+
+        router.push(`${CHAT_ROUTES.CONVERSATIONS}/${conversation.id}`);
+      } else {
+      }
+    },
+  });
   const model = useModelStore((state) => state.model);
   const scrollRef = useRef<HTMLDivElement>(null);
 
