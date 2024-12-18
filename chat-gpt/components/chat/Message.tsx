@@ -12,7 +12,7 @@ export function Message({ name = "User", content = "", role }: Props) {
   return (
     <div className="flex items-start gap-2 mb-5">
       <Avatar>
-        <AvatarImage src={isAssistant ? "/logo_black.jpg" : ""} alt="avatar" />
+        <AvatarImage src={isAssistant ? "/logo_black.png" : ""} alt="avatar" />
         <AvatarFallback> {avatarName[0]}</AvatarFallback>
       </Avatar>
 

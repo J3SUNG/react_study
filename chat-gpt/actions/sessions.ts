@@ -52,6 +52,10 @@ export const deleteSession = async () => {
 };
 
 export const verifySession = async () => {
+  if (typeof window !== "undefined") {
+    throw new Error("verifySession은 클라이언트에서 호출될 수 없습니다.");
+  }
+
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("session")?.value;
   const session = await verify(sessionCookie);
